@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLVX AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.12/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+</head>
+<body data-theme="dark">
+    <div class="main-container">
+        <aside class="sidebar" aria-label="NLVX AI navigation">
+            <div class="sidebar-header">
+                <button id="new-chat-btn" class="sidebar-btn" aria-label="Start a new chat">
+                    <i data-lucide="plus-circle"></i>
+                    <span data-key="new_chat">New Chat</span>
+                </button>
+            </div>
+            <div id="chat-history-list" class="chat-history-list" role="list"></div>
+            <div class="sidebar-footer">
+                <button id="clear-history-btn" class="sidebar-btn" aria-label="Clear chat history">
+                    <i data-lucide="trash-2"></i>
+                    <span data-key="clear_history">Clear History</span>
+                </button>
+                <button id="settings-btn" class="sidebar-btn" aria-label="Open settings">
+                    <i data-lucide="settings"></i>
+                    <span data-key="settings">Settings</span>
+                </button>
+            </div>
+        </aside>
+        <main class="chat-area">
+            <header class="chat-header">
+                <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="logo-avatar" aria-hidden="true">N</div>
+                <h1>NLVX AI</h1>
+            </header>
+            <div id="chat-box" class="chat-box" role="log" aria-live="polite"></div>
+            <div id="welcome-screen" class="welcome-screen">
+                <div class="logo-avatar" aria-hidden="true">N</div>
+                <h2 data-key="welcome_message">Hello! I'm NLVX AI. How can I assist you today?</h2>
+            </div>
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea id="user-input" data-key-placeholder="ask_me_anything" placeholder="Ask me anything..." aria-label="Type your message"></textarea>
+                    <button id="mic-btn" class="input-action-btn" aria-label="Voice input">
+                        <i data-lucide="mic"></i>
+                    </button>
+                    <button id="send-btn" class="input-action-btn send" aria-label="Send message">
+                        <i data-lucide="send"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="settings-modal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close settings">×</button>
+            <div class="setting-item">
+                <label data-key="your_name">Your Name</label>
+                <input id="username-input" class="settings-input" data-key-placeholder="enter_your_name" placeholder="Enter your name" aria-label="Your name">
+            </div>
+            <div class="setting-item">
+                <label data-key="avatar">Avatar</label>
+                <div class="avatar-selector">
+                    <img id="avatar-preview" src="" alt="Avatar preview" class="avatar-preview">
+                    <input type="file" id="avatar-upload" accept="image/*" aria-label="Upload avatar">
+                </div>
+            </div>
+            <div class="setting-item">
+                <label data-key="theme">Theme</label>
+                <div class="button-group">
+                    <button id="light-mode-btn" data-key="light_theme">Light</button>
+                    <button id="dark-mode-btn" data-key="dark_theme">Dark</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label data-key="ui_language">UI Language</label>
+                <div id="language-switcher" class="language-switcher"></div>
+            </div>
+            <div class="setting-item">
+                <label data-key="voice_language">Voice Language</label>
+                <select id="voice-language-select" class="settings-input" aria-label="Voice language"></select>
+            </div>
+        </div>
+    </div>
+    <div id="confirm-modal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <h2 id="confirm-title" data-key="confirm_title">Clear History</h2>
+            <p id="confirm-text" data-key="confirm_clear">Are you sure you want to delete all conversations? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="confirm-ok-btn" class="confirm-btn ok" data-key="confirm">Confirm</button>
+                <button id="confirm-cancel-btn" class="confirm-btn cancel" data-key="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="toast-notification" class="toast" role="alert"></div>
+    <script src="script.js"></script>
+</body>
+</html>
