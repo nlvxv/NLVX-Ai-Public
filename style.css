@@ -186,39 +186,77 @@ body::before {
     animation: pulse 2.5s infinite ease-in-out;
 }
 
-/* --- MESSAGES --- */
+/* --- MESSAGES (FINAL POLISHED VERSION) --- */
 .message {
-    display: flex; gap: 1rem; margin-bottom: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto;
-    animation: slideInUp 0.5s var(--transition-medium); animation-fill-mode: both;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: slideInUp 0.5s var(--transition-medium);
+    animation-fill-mode: both;
 }
-.message.user { flex-direction: row-reverse; }
+.message.user {
+    flex-direction: row-reverse;
+}
 .message .avatar {
-    width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
-    justify-content: center; font-weight: 600; flex-shrink: 0;
-    background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
-.message.user .avatar { background: var(--accent-color); color: white; border: none; }
+.message.user .avatar {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+}
 .message-content {
-    background: var(--bg-color); padding: 0.75rem 1.25rem; border-radius: var(--border-radius-main);
-    width: fit-content; max-width: calc(100% - 52px); font-size: 1rem; line-height: 1.7;
-    border: 1px solid var(--border-color);
-}
-.message.user .message-content { background: var(--accent-color); color: white; border: none; }
-.message-content p:last-child { margin-bottom: 0; }
-.loading-cursor {
-    display: inline-block; width: 3px; height: 1em; background: var(--text-color);
-    animation: blink 1s infinite; vertical-align: text-bottom;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-/* --- INTERACTIVE CODE BLOCK STYLING (IMPROVED BUTTON) --- */
-.code-block-container {
-    background-color: #0D1117;
-    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    padding: 0; /* Remove padding to allow code block to fill the space */
     border-radius: var(--border-radius-main);
-    margin: 1rem 0;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    width: fit-content;
+    max-width: calc(100% - 52px);
+    font-size: 1rem;
+    line-height: 1.7;
+    border: 1px solid var(--border-color);
+    overflow: hidden; /* Ensure the container clips its children */
+}
+.message.user .message-content {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+}
+/* Add padding back for regular text paragraphs */
+.message-content > p {
+    padding: 0.75rem 1.25rem;
+}
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+.loading-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background: var(--text-color);
+    animation: blink 1s infinite;
+    vertical-align: text-bottom;
+}
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* --- INTERACTIVE CODE BLOCK STYLING (FINAL POLISHED VERSION) --- */
+.code-block-container {
     animation: slideInUp 0.5s ease;
 }
 
@@ -226,8 +264,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-color);
-    padding: 0.5rem 0.75rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -244,8 +282,8 @@ body::before {
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: var(--surface-color);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    border: none;
     color: var(--secondary-text-color);
     border-radius: var(--border-radius-small);
     cursor: pointer;
@@ -255,7 +293,6 @@ body::before {
 
 .code-action-btn:hover {
     background-color: var(--accent-color);
-    border-color: var(--accent-color);
     color: white;
 }
 
@@ -284,7 +321,6 @@ body::before {
 
 .code-action-btn.copied {
     background-color: #28a745;
-    border-color: #28a745;
     color: white;
 }
 
@@ -303,6 +339,7 @@ body::before {
     padding: 1rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    background-color: #0D1117;
 }
 
 .code-block-container pre code.hljs {
@@ -448,4 +485,20 @@ body::before {
 
 /* --- TOAST --- */
 .toast {
-    visibility: hidden; min-width: 250px; background: #
+    visibility: hidden; min-width: 250px; background: #333; color: white;
+    text-align: center; border-radius: var(--border-radius-main); padding: 1rem;
+    position: fixed; z-index: 2000; left: 50%; bottom: 30px;
+    transform: translateX(-50%); opacity: 0; transition: all 0.5s ease;
+    box-shadow: var(--shadow-color);
+}
+.toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .sidebar { position: fixed; transform: translateX(-100%); }
+    [dir="rtl"] .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0); }
+    #sidebar-toggle-btn { display: flex; }
+    .chat-header, .input-area { padding-left: 1rem; padding-right: 1rem; }
+    .chat-box { padding: 1rem; }
+}
