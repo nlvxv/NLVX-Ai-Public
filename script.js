@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLanguage = localStorage.getItem('nlvx-language') || 'en';
 
     const translations = {
-        en: { code: "en", dir: "ltr", name: "EN", new_chat: "New Chat", settings: "Settings", your_name: "Your Name", theme: "Theme", ui_language: "UI Language", ask_me_anything: "Ask me anything...", welcome_message: "Hello! I'm NLVX AI. How can I assist you today?", confirm_clear: "Are you sure you want to delete all conversations? This action cannot be undone.", confirm_title: "Clear History", light_theme: "Light", dark_theme: "Dark", confirm: "Confirm", cancel: "Cancel", copied: "Copied!", listening: "Listening...", copy_code: "Copy Code", copy_success: "Copied!", clear_history: "Clear All History", enter_your_name: "Enter your name" },
-        ar: { code: "ar", dir: "rtl", name: "AR", new_chat: "محادثة جديدة", settings: "الإعدادات", your_name: "اسمك", theme: "السمة", ui_language: "لغة الواجهة", ask_me_anything: "اسألني أي شيء...", welcome_message: "أهلاً! أنا NLVX AI. كيف يمكنني مساعدتك اليوم؟", confirm_clear: "هل أنت متأكد أنك تريد حذف جميع المحادثات؟ لا يمكن التراجع عن هذا الإجراء.", confirm_title: "حذف السجل", light_theme: "فاتح", dark_theme: "داكن", confirm: "تأكيد", cancel: "إلغاء", copied: "تم النسخ!", listening: "يتم الاستماع...", copy_code: "نسخ الكود", copy_success: "تم النسخ!", clear_history: "حذف كل السجل", enter_your_name: "أدخل اسمك" },
-        ur: { code: "ur", dir: "rtl", name: "UR", new_chat: "نئی چیٹ", settings: "ترتیبات", your_name: "آپ کا نام", theme: "تھیم", ui_language: "UI زبان", ask_me_anything: "مجھ سے کچھ بھی پوچھیں...", welcome_message: "خوش آمدید! میں NLVX AI ہوں۔ میں آج آپ کی کیسے مدد کر سکتا ہوں؟", confirm_clear: "کیا آپ واقعی تمام گفتگو حذف کرنا چاہتے ہیں؟ اس کارروائی کو واپس نہیں کیا جا سکتا۔", confirm_title: "تاریخ صاف کریں", light_theme: "روشنی", dark_theme: "اندھیرا", confirm: "تصدیق کریں", cancel: "منسوخ کریں", copied: "کاپی ہو گیا!", listening: "سن رہا ہوں...", copy_code: "کوڈ کاپی کریں", copy_success: "کاپی ہو گیا!", clear_history: "تمام تاریخ صاف کریں", enter_your_name: "اپنا نام درج کریں" },
+        en: { code: "en", dir: "ltr", name: "EN", new_chat: "New Chat", settings: "Settings", your_name: "Your Name", theme: "Theme", ui_language: "UI Language", ask_me_anything: "Ask me anything...", welcome_message: "Hello! I'm NLVX AI. How can I assist you today?", confirm_clear: "Are you sure you want to delete all conversations? This action cannot be undone.", confirm_title: "Clear History", light_theme: "Light", dark_theme: "Dark", confirm: "Confirm", cancel: "Cancel", copied: "Copied!", listening: "Listening...", copy_code: "Copy Code", copy_success: "Copied!", clear_history: "Clear All History", enter_your_name: "Enter your name", confirm_lang_change_title: "Confirm Language Change", confirm_lang_change_text: "Changing the language will reload the application. Continue?" },
+        ar: { code: "ar", dir: "rtl", name: "AR", new_chat: "محادثة جديدة", settings: "الإعدادات", your_name: "اسمك", theme: "السمة", ui_language: "لغة الواجهة", ask_me_anything: "اسألني أي شيء...", welcome_message: "أهلاً! أنا NLVX AI. كيف يمكنني مساعدتك اليوم؟", confirm_clear: "هل أنت متأكد أنك تريد حذف جميع المحادثات؟ لا يمكن التراجع عن هذا الإجراء.", confirm_title: "حذف السجل", light_theme: "فاتح", dark_theme: "داكن", confirm: "تأكيد", cancel: "إلغاء", copied: "تم النسخ!", listening: "يتم الاستماع...", copy_code: "نسخ الكود", copy_success: "تم النسخ!", clear_history: "حذف كل السجل", enter_your_name: "أدخل اسمك", confirm_lang_change_title: "تأكيد تغيير اللغة", confirm_lang_change_text: "تغيير اللغة سيعيد تحميل التطبيق. هل تريد المتابعة؟" },
+        ur: { code: "ur", dir: "rtl", name: "UR", new_chat: "نئی چیٹ", settings: "ترتیبات", your_name: "آپ کا نام", theme: "تھیم", ui_language: "UI زبان", ask_me_anything: "مجھ سے کچھ بھی پوچھیں...", welcome_message: "خوش آمدید! میں NLVX AI ہوں۔ میں آج آپ کی کیسے مدد کر سکتا ہوں؟", confirm_clear: "کیا آپ واقعی تمام گفتگو حذف کرنا چاہتے ہیں؟ اس کارروائی کو واپس نہیں کیا جا سکتا۔", confirm_title: "تاریخ صاف کریں", light_theme: "روشنی", dark_theme: "اندھیرا", confirm: "تصدیق کریں", cancel: "منسوخ کریں", copied: "کاپی ہو گیا!", listening: "سن رہا ہوں...", copy_code: "کوڈ کاپی کریں", copy_success: "کاپی ہو گیا!", clear_history: "تمام تاریخ صاف کریں", enter_your_name: "اپنا نام درج کریں", confirm_lang_change_title: "زبان کی تبدیلی کی تصدیق کریں", confirm_lang_change_text: "زبان تبدیل کرنے سے ایپلیکیشن دوبارہ لوڈ ہو جائے گی۔ کیا آپ جاری رکھنا چاہتے ہیں؟" },
     };
 
     const selectors = {
@@ -73,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.history-item').forEach(item => {
             item.classList.toggle('active', item.dataset.chatId === chatId);
         });
+        // Close sidebar on mobile after selecting a chat
+        if (window.innerWidth <= 768) {
+            selectors.sidebar.classList.add('closed');
+        }
     };
 
     const renderChatHistory = () => {
@@ -133,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             copyBtn.setAttribute('aria-label', 'Copy code');
             copyBtn.innerHTML = `
                 <i data-lucide="copy" class="lucide-icon icon-copy"></i>
-                <i data-lucide="check" class="lucide-icon icon-check"></i>
+                <i data-lucide="check" class="lucide-icon icon-check" style="display:none;"></i>
             `;
             copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_code);
 
@@ -147,9 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const code = pre.innerText;
                 navigator.clipboard.writeText(code).then(() => {
                     copyBtn.classList.add('copied');
+                    copyBtn.querySelector('.icon-copy').style.display = 'none';
+                    copyBtn.querySelector('.icon-check').style.display = 'inline-block';
                     copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_success);
                     setTimeout(() => {
                         copyBtn.classList.remove('copied');
+                        copyBtn.querySelector('.icon-copy').style.display = 'inline-block';
+                        copyBtn.querySelector('.icon-check').style.display = 'none';
                         copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_code);
                     }, 2000);
                 });
@@ -189,6 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleSendMessage = async () => {
         const prompt = selectors.userInput.value.trim();
         if (!prompt || selectors.sendBtn.disabled || isStreaming) return;
+
+        if (!currentChatId) {
+            createNewChat();
+        }
 
         addMessageToChatBox('user', prompt);
         allChats[currentChatId].messages.push({ role: 'user', content: prompt });
@@ -295,6 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-title').textContent = title;
         document.getElementById('confirm-text').textContent = text;
         openModal(selectors.confirmModal);
+        
+        // Clone and replace the OK button to remove old event listeners
+        const newOkBtn = selectors.confirmOkBtn.cloneNode(true);
+        selectors.confirmOkBtn.parentNode.replaceChild(newOkBtn, selectors.confirmOkBtn);
+        selectors.confirmOkBtn = newOkBtn;
+
         selectors.confirmOkBtn.onclick = () => {
             onConfirm();
             closeModal(selectors.confirmModal);
@@ -335,8 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.toggle('active', lang.code === currentLanguage);
             btn.onclick = () => {
                 showConfirmModal(
-                    "Confirm Language Change", 
-                    "Changing the language will reload the application. Continue?", 
+                    translations[currentLanguage].confirm_lang_change_title, 
+                    translations[currentLanguage].confirm_lang_change_text, 
                     () => {
                         localStorage.setItem('nlvx-language', lang.code);
                         window.location.reload();
@@ -411,8 +429,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
+            // Request permission every time to handle cases where it might be revoked
             await navigator.mediaDevices.getUserMedia({ audio: true });
-            recognition.lang = localStorage.getItem('nlvx-voice-lang') || 'en-US';
+            recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : currentLanguage === 'ur' ? 'ur-PK' : 'en-US';
             recognition.start();
         } catch (err) {
             console.error("Error getting media stream or starting recognition:", err);
@@ -432,7 +451,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectors.usernameInput.value = localStorage.getItem('nlvx-username') || 'User';
 
-        allChats = JSON.parse(localStorage.getItem('nlvx-all-chats')) || {};
+        try {
+            allChats = JSON.parse(localStorage.getItem('nlvx-all-chats')) || {};
+        } catch (e) {
+            allChats = {};
+        }
         currentChatId = localStorage.getItem('nlvx-current-chat-id');
         
         if (Object.keys(allChats).length === 0 || !allChats[currentChatId]) {

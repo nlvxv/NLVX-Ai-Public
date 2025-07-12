@@ -111,7 +111,7 @@ body::before {
 @keyframes wave { 0% { transform: scale(0.5); opacity: 0.5; } 50% { opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
 
 /* --- LAYOUT & GLASSMORPHISM --- */
-.main-container { display: flex; height: 100vh; }
+.main-container { display: flex; height: 100vh; position: relative; overflow: hidden; }
 .sidebar, .chat-area, .modal-content {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -236,7 +236,7 @@ body::before {
     border: none;
 }
 /* Add padding back for regular text paragraphs */
-.message-content > :not(pre) {
+.message-content > :not(.code-block-container) {
     padding: 0.75rem 1.25rem;
 }
 .message-content p:last-child {
@@ -331,8 +331,9 @@ body::before {
     transition: opacity 0.2s ease;
 }
 
-.code-action-btn.copied .icon-copy { display: none; }
+.code-action-btn .icon-copy { display: inline-block; }
 .code-action-btn .icon-check { display: none; }
+.code-action-btn.copied .icon-copy { display: none; }
 .code-action-btn.copied .icon-check { display: inline-block; }
 
 .code-block-container pre {
@@ -555,7 +556,7 @@ body::before {
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
     .sidebar {
-        position: fixed;
+        position: absolute;
         height: 100%;
         transform: translateX(-100%);
     }
