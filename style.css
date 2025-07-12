@@ -1,19 +1,18 @@
 /* --- GLOBAL STYLES & VARIABLES --- */
 :root {
-    /* Default Font (English & others) */
+    /* Fonts and basic settings */
     --font-main: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    /* Arabic Font (Apple's Official) */
     --font-arabic: 'SF Arabic', -apple-system, BlinkMacSystemFont, "Segoe UI", "San Francisco", "Helvetica Neue", "Arial", sans-serif;
     --font-code: 'SF Mono', 'Fira Code', monospace;
     --transition-fast: 0.2s ease-in-out;
     --transition-medium: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     --border-radius-main: 12px;
     --border-radius-small: 8px;
-    --sidebar-width: 280px; /*  <--  (تغيير 1) أضفنا متغير لعرض الشريط الجانبي */
+    --sidebar-width: 280px;
 
     /* Dark Theme */
     --dark-bg: #0D1117;
-    --dark-surface: rgba(22, 27, 34, 0.7); /* Glassmorphism */
+    --dark-surface: rgba(22, 27, 34, 0.7);
     --dark-text: #E6EDF3;
     --dark-secondary-text: #8B949E;
     --dark-border: rgba(48, 54, 61, 0.8);
@@ -26,7 +25,7 @@
 
     /* Light Theme */
     --light-bg: #F6F8FA;
-    --light-surface: rgba(255, 255, 255, 0.7); /* Glassmorphism */
+    --light-surface: rgba(255, 255, 255, 0.7);
     --light-text: #1F2328;
     --light-secondary-text: #57606A;
     --light-border: rgba(208, 215, 222, 0.8);
@@ -123,7 +122,7 @@ body::before {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    transition: margin-left var(--transition-medium), margin-right var(--transition-medium); /* <-- (تغيير 2) غيرنا الحركة إلى margin */
+    transition: margin-left var(--transition-medium), margin-right var(--transition-medium);
     flex-shrink: 0;
     z-index: 10;
 }
@@ -134,12 +133,13 @@ body::before {
     height: 100vh;
     background: transparent;
     width: 100%;
-    transition: width var(--transition-medium); /* <-- (تغيير 3) أضفنا حركة للعرض */
+    transition: width var(--transition-medium);
 }
 
 /* --- SIDEBAR HIDING LOGIC (FOR ALL SCREENS) --- */
+/* This logic applies to both PC and Mobile */
 .sidebar.closed {
-    margin-left: calc(-1 * var(--sidebar-width)); /* <-- (تغيير 4) إخفاء الشريط بتحريك الهامش */
+    margin-left: calc(-1 * var(--sidebar-width));
 }
 [dir="rtl"] .sidebar {
     border-right: none;
@@ -147,13 +147,13 @@ body::before {
 }
 [dir="rtl"] .sidebar.closed {
     margin-left: 0;
-    margin-right: calc(-1 * var(--sidebar-width)); /* <-- (تغيير 5) إخفاء الشريط لليمين */
+    margin-right: calc(-1 * var(--sidebar-width));
 }
 
-/* The toggle button is now always visible */
+/* The toggle button is always visible */
 #sidebar-toggle-btn {
     display: flex;
-    z-index: 30; /* Ensure it's clickable */
+    z-index: 30;
 }
 
 /* --- SIDEBAR CONTENT --- */
@@ -561,23 +561,8 @@ body::before {
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
+/* No special rules needed for mobile, as the "push" behavior is now default */
 @media (max-width: 768px) {
-    /* On mobile, the sidebar overlays the content */
-    .sidebar {
-        position: absolute;
-    }
-    .sidebar.closed {
-        margin-left: 0; /* Reset margin for overlay behavior */
-        transform: translateX(-100%);
-    }
-    [dir="rtl"] .sidebar.closed {
-        margin-right: 0;
-        transform: translateX(100%);
-    }
-    .sidebar:not(.closed) {
-        transform: translateX(0);
-    }
-    
     .chat-header, .input-area {
         padding-left: 1rem;
         padding-right: 1rem;
