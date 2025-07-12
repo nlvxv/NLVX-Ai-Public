@@ -9,6 +9,7 @@
     --transition-medium: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     --border-radius-main: 12px;
     --border-radius-small: 8px;
+    --sidebar-width: 280px; /*  <--  (تغيير 1) أضفنا متغير لعرض الشريط الجانبي */
 
     /* Dark Theme */
     --dark-bg: #0D1117;
@@ -67,7 +68,7 @@ body[data-theme="light"] {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; font-size: 16px; /* Base font size */ }
+html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
     font-family: var(--font-main);
@@ -79,7 +80,6 @@ body {
     font-size: 1rem;
 }
 
-/* Apply Apple's Arabic font when the direction is RTL */
 body[dir="rtl"] { font-family: var(--font-arabic); }
 
 /* --- CUSTOM SCROLLBAR --- */
@@ -112,31 +112,58 @@ body::before {
 
 /* --- LAYOUT & GLASSMORPHISM --- */
 .main-container { display: flex; height: 100vh; position: relative; overflow: hidden; }
-.sidebar, .chat-area, .modal-content {
+.sidebar, .modal-content {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
 .sidebar {
-    width: 280px; background: var(--surface-color); border-right: 1px solid var(--border-color);
-    display: flex; flex-direction: column; padding: 1rem;
-    transition: transform var(--transition-medium); 
-    z-index: 20;
+    width: var(--sidebar-width);
+    background: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    transition: margin-left var(--transition-medium), margin-right var(--transition-medium); /* <-- (تغيير 2) غيرنا الحركة إلى margin */
     flex-shrink: 0;
+    z-index: 10;
 }
 .chat-area {
-    flex-grow: 1; display: flex; flex-direction: column; height: 100vh;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     background: transparent;
     width: 100%;
+    transition: width var(--transition-medium); /* <-- (تغيير 3) أضفنا حركة للعرض */
 }
 
-/* --- SIDEBAR --- */
+/* --- SIDEBAR HIDING LOGIC (FOR ALL SCREENS) --- */
+.sidebar.closed {
+    margin-left: calc(-1 * var(--sidebar-width)); /* <-- (تغيير 4) إخفاء الشريط بتحريك الهامش */
+}
+[dir="rtl"] .sidebar {
+    border-right: none;
+    border-left: 1px solid var(--border-color);
+}
+[dir="rtl"] .sidebar.closed {
+    margin-left: 0;
+    margin-right: calc(-1 * var(--sidebar-width)); /* <-- (تغيير 5) إخفاء الشريط لليمين */
+}
+
+/* The toggle button is now always visible */
+#sidebar-toggle-btn {
+    display: flex;
+    z-index: 30; /* Ensure it's clickable */
+}
+
+/* --- SIDEBAR CONTENT --- */
 .sidebar-header, .sidebar-footer { padding: 0.5rem; }
 .sidebar-btn {
     width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem;
     background: transparent; border: 1px solid var(--border-color); border-radius: var(--border-radius-small);
     color: var(--text-color); cursor: pointer; font-size: 0.9rem; font-weight: 500;
     transition: all var(--transition-fast);
-    font-family: inherit; /* Inherit font from body */
+    font-family: inherit;
 }
 .sidebar-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); transform: translateY(-2px); }
 .sidebar-footer { margin-top: auto; }
@@ -157,7 +184,7 @@ body::before {
     display: flex; align-items: center; padding: 0.75rem 1.5rem;
     border-bottom: 1px solid var(--border-color); flex-shrink: 0;
     background: var(--surface-color);
-    gap: 1rem; /* Adds space between menu button and title */
+    gap: 1rem;
 }
 .chat-title-wrapper { display: flex; align-items: center; gap: 0.75rem; }
 .logo-avatar {
@@ -185,7 +212,7 @@ body::before {
     font-size: 1.25rem;
 }
 
-/* --- MESSAGES (FINAL POLISHED VERSION) --- */
+/* --- MESSAGES --- */
 .message {
     display: flex;
     gap: 1rem;
@@ -219,14 +246,14 @@ body::before {
 }
 .message-content {
     background: var(--bg-color);
-    padding: 0; /* Remove padding to allow code block to fill the space */
+    padding: 0;
     border-radius: var(--border-radius-main);
     width: fit-content;
     max-width: calc(100% - 52px);
     font-size: 1rem;
     line-height: 1.7;
     border: 1px solid var(--border-color);
-    overflow: hidden; /* Ensure the container clips its children */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -235,7 +262,6 @@ body::before {
     color: white;
     border: none;
 }
-/* Add padding back for regular text paragraphs */
 .message-content > :not(.code-block-container) {
     padding: 0.75rem 1.25rem;
 }
@@ -256,11 +282,10 @@ body::before {
     }
 }
 
-/* --- INTERACTIVE CODE BLOCK STYLING (FINAL POLISHED VERSION) --- */
+/* --- CODE BLOCKS --- */
 .code-block-container {
     animation: slideInUp 0.5s ease;
 }
-
 .code-block-header {
     display: flex;
     justify-content: space-between;
@@ -269,14 +294,12 @@ body::before {
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--border-color);
 }
-
 .code-block-header .lang-name {
     font-family: var(--font-code);
     color: var(--secondary-text-color);
     font-size: 0.9rem;
     font-weight: 500;
 }
-
 .code-action-btn {
     display: flex;
     align-items: center;
@@ -291,12 +314,10 @@ body::before {
     position: relative;
     transition: all var(--transition-fast);
 }
-
 .code-action-btn:hover {
     background-color: var(--accent-color);
     color: white;
 }
-
 .code-action-btn::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -314,28 +335,23 @@ body::before {
     transition: opacity var(--transition-fast), visibility var(--transition-fast);
     z-index: 10;
 }
-
 .code-action-btn:hover::after {
     opacity: 1;
     visibility: visible;
 }
-
 .code-action-btn.copied {
     background-color: #28a745;
     color: white;
 }
-
 .code-action-btn .lucide-icon {
     width: 16px;
     height: 16px;
     transition: opacity 0.2s ease;
 }
-
 .code-action-btn .icon-copy { display: inline-block; }
 .code-action-btn .icon-check { display: none; }
 .code-action-btn.copied .icon-copy { display: none; }
 .code-action-btn.copied .icon-check { display: inline-block; }
-
 .code-block-container pre {
     margin: 0;
     padding: 1rem;
@@ -343,7 +359,6 @@ body::before {
     -webkit-overflow-scrolling: touch;
     background-color: #0D1117;
 }
-
 .code-block-container pre code.hljs {
     font-family: var(--font-code);
     font-size: 0.95rem;
@@ -358,7 +373,6 @@ body::before {
     border-top: 1px solid var(--border-color);
     position: relative;
 }
-
 .input-error-container {
     display: flex;
     align-items: center;
@@ -372,7 +386,6 @@ body::before {
     margin-bottom: 0.75rem;
     animation: fadeIn 0.3s ease;
 }
-
 .input-wrapper {
     max-width: 800px; margin: 0 auto; position: relative; background: var(--bg-color);
     border: 1px solid var(--border-color); border-radius: 24px; padding: 0.25rem 0.5rem;
@@ -427,7 +440,7 @@ body::before {
 .confirm-btn.ok { background: var(--accent-color); color: white; }
 .confirm-btn.cancel { background: var(--border-color); color: var(--text-color); }
 
-/* --- ENHANCED SETTINGS MODAL STYLES --- */
+/* --- SETTINGS MODAL --- */
 .modal-content.settings-modal {
     max-width: 500px; padding: 0; background: var(--bg-color);
     border: 1px solid var(--border-color); max-height: 90vh;
@@ -479,7 +492,7 @@ body::before {
     color: var(--secondary-text-color); cursor: pointer; font-weight: 500;
     display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     transition: background var(--transition-fast), color var(--transition-fast);
-    font-family: inherit; /* Inherit font from body */
+    font-family: inherit;
 }
 .button-group button:first-child { border-right: 1px solid var(--border-color); }
 .button-group button.active { background: var(--accent-color); color: white; }
@@ -503,7 +516,7 @@ body::before {
 }
 .btn-danger:hover { background: var(--accent-color); color: white; }
 
-/* --- TOAST NOTIFICATION (IMPROVED DESIGN) --- */
+/* --- TOAST NOTIFICATION --- */
 .toast {
     display: flex;
     align-items: center;
@@ -525,27 +538,21 @@ body::before {
     transition: all 0.4s cubic-bezier(0.21, 1.02, 0.73, 1);
     box-shadow: var(--shadow-color);
     border: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
-
 .toast.show {
     visibility: visible;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
-
 .toast .lucide-icon {
     flex-shrink: 0;
 }
-
 .toast.error {
     border-left: 4px solid var(--dark-accent);
 }
 .toast.error .lucide-icon {
     color: var(--dark-accent);
 }
-
 .toast.success {
     border-left: 4px solid #28a745;
 }
@@ -553,35 +560,24 @@ body::before {
     color: #28a745;
 }
 
-/* --- RESPONSIVE DESIGN --- */
+/* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
+    /* On mobile, the sidebar overlays the content */
     .sidebar {
         position: absolute;
-        height: 100%;
-        transform: translateX(-100%);
-    }
-    [dir="rtl"] .sidebar {
-        transform: translateX(100%);
-        border-right: none;
-        border-left: 1px solid var(--border-color);
     }
     .sidebar.closed {
-        transform: translateX(-100%) !important;
+        margin-left: 0; /* Reset margin for overlay behavior */
+        transform: translateX(-100%);
     }
     [dir="rtl"] .sidebar.closed {
-        transform: translateX(100%) !important;
+        margin-right: 0;
+        transform: translateX(100%);
     }
     .sidebar:not(.closed) {
         transform: translateX(0);
     }
-    [dir="rtl"] .sidebar:not(.closed) {
-        transform: translateX(0);
-    }
-
-    #sidebar-toggle-btn {
-        display: flex;
-        z-index: 30;
-    }
+    
     .chat-header, .input-area {
         padding-left: 1rem;
         padding-right: 1rem;
