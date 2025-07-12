@@ -67,7 +67,7 @@ body[data-theme="light"] {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; font-size: 16px; /* Base font size */ }
 
 body {
     font-family: var(--font-main);
@@ -76,6 +76,7 @@ body {
     overflow: hidden;
     transition: background-color var(--transition-medium), color var(--transition-medium);
     position: relative;
+    font-size: 1rem;
 }
 
 /* Apply Apple's Arabic font when the direction is RTL */
@@ -118,21 +119,14 @@ body::before {
 .sidebar {
     width: 280px; background: var(--surface-color); border-right: 1px solid var(--border-color);
     display: flex; flex-direction: column; padding: 1rem;
-    transition: margin-left var(--transition-medium), margin-right var(--transition-medium); 
-    z-index: 10;
+    transition: transform var(--transition-medium); 
+    z-index: 20;
+    flex-shrink: 0;
 }
 .chat-area {
     flex-grow: 1; display: flex; flex-direction: column; height: 100vh;
     background: transparent;
-}
-
-/* --- Sidebar Hiding Logic for LTR and RTL --- */
-.sidebar.closed {
-    margin-left: -280px;
-}
-[dir="rtl"] .sidebar.closed {
-    margin-left: 0;
-    margin-right: -280px;
+    width: 100%;
 }
 
 /* --- SIDEBAR --- */
@@ -170,8 +164,9 @@ body::before {
     width: 36px; height: 36px; border-radius: 50%; background: var(--accent-color);
     color: white; display: flex; align-items: center; justify-content: center;
     font-size: 1.2rem; font-weight: 700;
+    flex-shrink: 0;
 }
-.chat-container { flex-grow: 1; position: relative; }
+.chat-container { flex-grow: 1; position: relative; overflow: hidden; }
 .chat-box {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     overflow-y: auto; padding: 1.5rem;
@@ -180,10 +175,14 @@ body::before {
 .welcome-screen {
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     height: 100%; text-align: center; animation: fadeIn 0.5s ease;
+    padding: 1rem;
 }
 .welcome-screen .logo-avatar.large {
     width: 72px; height: 72px; font-size: 2.5rem; margin-bottom: 1rem;
     animation: pulse 2.5s infinite ease-in-out;
+}
+.welcome-screen h2 {
+    font-size: 1.25rem;
 }
 
 /* --- MESSAGES (FINAL POLISHED VERSION) --- */
@@ -237,7 +236,7 @@ body::before {
     border: none;
 }
 /* Add padding back for regular text paragraphs */
-.message-content > p {
+.message-content > :not(pre) {
     padding: 0.75rem 1.25rem;
 }
 .message-content p:last-child {
@@ -389,6 +388,7 @@ body::before {
     background: transparent; border: none; border-radius: 50%; width: 40px; height: 40px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
     color: var(--secondary-text-color); transition: all var(--transition-fast);
+    flex-shrink: 0;
 }
 .icon-btn:hover { background: var(--accent-color); color: white; transform: scale(1.1); }
 .icon-btn.send-btn { background: var(--accent-color); color: white; }
@@ -410,9 +410,10 @@ body::before {
     display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.3); justify-content: center; align-items: center;
     animation: fadeIn 0.3s ease;
+    padding: 1rem;
 }
 .modal-content {
-    background: var(--surface-color); padding: 2rem; border-radius: 16px; width: 90%;
+    background: var(--surface-color); padding: 2rem; border-radius: 16px; width: 100%;
     max-width: 450px; position: relative; display: flex; flex-direction: column;
     gap: 1.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-color);
     animation: slideInUp 0.4s ease;
@@ -553,10 +554,41 @@ body::before {
 
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
-    .sidebar { position: fixed; transform: translateX(-100%); }
-    [dir="rtl"] .sidebar { transform: translateX(100%); }
-    .sidebar.open { transform: translateX(0); }
-    #sidebar-toggle-btn { display: flex; }
-    .chat-header, .input-area { padding-left: 1rem; padding-right: 1rem; }
-    .chat-box { padding: 1rem; }
+    .sidebar {
+        position: fixed;
+        height: 100%;
+        transform: translateX(-100%);
+    }
+    [dir="rtl"] .sidebar {
+        transform: translateX(100%);
+        border-right: none;
+        border-left: 1px solid var(--border-color);
+    }
+    .sidebar.closed {
+        transform: translateX(-100%) !important;
+    }
+    [dir="rtl"] .sidebar.closed {
+        transform: translateX(100%) !important;
+    }
+    .sidebar:not(.closed) {
+        transform: translateX(0);
+    }
+    [dir="rtl"] .sidebar:not(.closed) {
+        transform: translateX(0);
+    }
+
+    #sidebar-toggle-btn {
+        display: flex;
+        z-index: 30;
+    }
+    .chat-header, .input-area {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .chat-box {
+        padding: 1rem;
+    }
+    .message {
+        max-width: 100%;
+    }
 }
