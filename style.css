@@ -557,4 +557,6 @@ body::before {
     [dir="rtl"] .sidebar { transform: translateX(100%); }
     .sidebar.open { transform: translateX(0); }
     #sidebar-toggle-btn { display: flex; }
-    .chat-header, .input-area { padding-left: 1rem; padding-
+    .chat-header, .input-area { padding-left: 1rem; padding-right: 1rem; }
+    .chat-box { padding: 1rem; }
+}

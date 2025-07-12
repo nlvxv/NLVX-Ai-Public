@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NLVX AI</title>
+
+    <!-- Website Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <!-- Icons Library (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Markdown & Code Highlighting Libraries -->
@@ -54,6 +58,7 @@
             </div>
 
             <div class="input-area">
+                <div id="input-error-container" class="input-error-container" style="display: none;"></div>
                 <div class="input-wrapper">
                     <textarea id="user-input" data-key-placeholder="ask_me_anything" placeholder="Ask me anything..." rows="1"></textarea>
                     <button id="mic-btn" class="icon-btn" aria-label="Voice input">
@@ -157,4 +162,4 @@
     <!-- Link to the JavaScript file -->
     <script src="script.js"></script>
 </body>
-</html>`
+</html>
