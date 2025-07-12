@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentLanguage = localStorage.getItem('nlvx-language') || 'en';
 
     const translations = {
-        en: { code: "en", dir: "ltr", name: "EN", new_chat: "New Chat", settings: "Settings", your_name: "Your Name", enter_your_name: "Enter your name", clear_history: "Clear All History", theme: "Theme", light_theme: "Light", dark_theme: "Dark", ui_language: "UI Language", ask_me_anything: "Ask me anything...", welcome_message: "Hello! I'm NLVX AI. How can I assist you today?", confirm_clear: "Are you sure you want to delete all conversations? This action cannot be undone.", confirm_title: "Clear History", confirm: "Confirm", cancel: "Cancel", copied: "Copied!", listening: "Listening...", copy_code: "Copy Code", copy_success: "Copied!", copy_fail: "Failed to copy" },
-        ar: { code: "ar", dir: "rtl", name: "AR", new_chat: "محادثة جديدة", settings: "الإعدادات", your_name: "اسمك", enter_your_name: "أدخل اسمك", clear_history: "حذف كل السجل", theme: "السمة", light_theme: "فاتح", dark_theme: "داكن", ui_language: "لغة الواجهة", ask_me_anything: "اسألني أي شيء...", welcome_message: "أهلاً! أنا NLVX AI. كيف يمكنني مساعدتك اليوم؟", confirm_clear: "هل أنت متأكد أنك تريد حذف جميع المحادثات؟ لا يمكن التراجع عن هذا الإجراء.", confirm_title: "حذف السجل", confirm: "تأكيد", cancel: "إلغاء", copied: "تم النسخ!", listening: "يستمع...", copy_code: "نسخ الكود", copy_success: "تم النسخ!", copy_fail: "فشل النسخ" },
-        ur: { code: "ur", dir: "rtl", name: "UR", new_chat: "نئی چیٹ", settings: "ترتیبات", your_name: "آپ کا نام", enter_your_name: "اپنا نام درج کریں", clear_history: "تمام تاریخ صاف کریں", theme: "تھیم", light_theme: "روشنی", dark_theme: "اندھیرا", ui_language: "UI زبان", ask_me_anything: "مجھ سے کچھ بھی پوچھیں...", welcome_message: "خوش آمدید! میں NLVX AI ہوں۔ میں آج آپ کی کیسے مدد کر سکتا ہوں؟", confirm_clear: "کیا آپ واقعی تمام گفتگو حذف کرنا چاہتے ہیں؟ اس کارروائی کو واپس نہیں کیا جا سکتا۔", confirm_title: "تاریخ صاف کریں", confirm: "تصدیق کریں", cancel: "منسوخ کریں", copied: "کاپی ہو گیا!", listening: "سن رہا ہے...", copy_code: "کوڈ کاپی کریں", copy_success: "کاپی ہو گیا!", copy_fail: "کاپی ناکام" },
+        en: { code: "en", dir: "ltr", name: "EN", new_chat: "New Chat", settings: "Settings", your_name: "Your Name", theme: "Theme", ui_language: "UI Language", ask_me_anything: "Ask me anything...", welcome_message: "Hello! I'm NLVX AI. How can I assist you today?", confirm_clear: "Are you sure you want to delete all conversations? This action cannot be undone.", confirm_title: "Clear History", light_theme: "Light", dark_theme: "Dark", confirm: "Confirm", cancel: "Cancel", copied: "Copied!", listening: "Listening...", copy_code: "Copy Code", copy_success: "Copied!", clear_history: "Clear All History", enter_your_name: "Enter your name" },
+        ar: { code: "ar", dir: "rtl", name: "AR", new_chat: "محادثة جديدة", settings: "الإعدادات", your_name: "اسمك", theme: "السمة", ui_language: "لغة الواجهة", ask_me_anything: "اسألني أي شيء...", welcome_message: "أهلاً! أنا NLVX AI. كيف يمكنني مساعدتك اليوم؟", confirm_clear: "هل أنت متأكد أنك تريد حذف جميع المحادثات؟ لا يمكن التراجع عن هذا الإجراء.", confirm_title: "حذف السجل", light_theme: "فاتح", dark_theme: "داكن", confirm: "تأكيد", cancel: "إلغاء", copied: "تم النسخ!", listening: "يتم الاستماع...", copy_code: "نسخ الكود", copy_success: "تم النسخ!", clear_history: "حذف كل السجل", enter_your_name: "أدخل اسمك" },
+        ur: { code: "ur", dir: "rtl", name: "UR", new_chat: "نئی چیٹ", settings: "ترتیبات", your_name: "آپ کا نام", theme: "تھیم", ui_language: "UI زبان", ask_me_anything: "مجھ سے کچھ بھی پوچھیں...", welcome_message: "خوش آمدید! میں NLVX AI ہوں۔ میں آج آپ کی کیسے مدد کر سکتا ہوں؟", confirm_clear: "کیا آپ واقعی تمام گفتگو حذف کرنا چاہتے ہیں؟ اس کارروائی کو واپس نہیں کیا جا سکتا۔", confirm_title: "تاریخ صاف کریں", light_theme: "روشنی", dark_theme: "اندھیرا", confirm: "تصدیق کریں", cancel: "منسوخ کریں", copied: "کاپی ہو گیا!", listening: "سن رہا ہوں...", copy_code: "کوڈ کاپی کریں", copy_success: "کاپی ہو گیا!", clear_history: "تمام تاریخ صاف کریں", enter_your_name: "اپنا نام درج کریں" },
     };
 
     const selectors = {
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmOkBtn: document.getElementById('confirm-ok-btn'),
         confirmCancelBtn: document.getElementById('confirm-cancel-btn'),
         toastNotification: document.getElementById('toast-notification'),
+        inputErrorContainer: document.getElementById('input-error-container'),
     };
 
     // --- 2. CORE FUNCTIONS ---
@@ -45,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('nlvx-username', selectors.usernameInput.value);
         } catch (e) {
             console.error("Failed to save state:", e);
-            showToast("Could not save session. Storage might be full.", 'error');
         }
     };
 
@@ -89,65 +89,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const showToast = (message, type = 'info') => {
-        const toast = selectors.toastNotification;
-        let icon = '';
-        if (type === 'error') {
-            icon = '<i data-lucide="alert-triangle" class="lucide-icon"></i>';
-        } else if (type === 'success') {
-            icon = '<i data-lucide="check-circle" class="lucide-icon"></i>';
-        }
-        toast.innerHTML = `${icon}<span>${message}</span>`;
-        lucide.createIcons({ nodes: [toast.querySelector('.lucide-icon')] });
-        toast.className = `toast show ${type}`;
+    const showInputError = (message) => {
+        const errorContainer = selectors.inputErrorContainer;
+        errorContainer.textContent = message;
+        errorContainer.style.display = 'flex';
         setTimeout(() => {
-            toast.className = `toast ${type}`;
-        }, 3000);
+            errorContainer.style.display = 'none';
+        }, 4000);
     };
 
     const renderMarkdown = (text) => {
-        return marked.parse(text, {
-            highlight: (code, lang) => {
-                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
-            },
-            gfm: true,
-            breaks: true,
-        });
+        const renderer = new marked.Renderer();
+        renderer.code = (code, language) => {
+            const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
+            const escapedCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `
+                <div class="code-block-container" data-language="${validLanguage}">
+                    <pre><code>${escapedCode}</code></pre>
+                </div>
+            `;
+        };
+        return marked.parse(text, { renderer, gfm: true, breaks: true });
     };
 
     const addCopyCodeFunctionality = (element) => {
         element.querySelectorAll('.code-block-container').forEach(container => {
-            const header = container.querySelector('.code-block-header');
-            if (!header || header.querySelector('.code-action-btn')) return;
+            if (container.querySelector('.code-block-header')) return;
+
+            const language = container.dataset.language || 'code';
+            const pre = container.querySelector('pre');
+            
+            hljs.highlightElement(pre.querySelector('code'));
+
+            const header = document.createElement('div');
+            header.className = 'code-block-header';
+
+            const langName = document.createElement('span');
+            langName.className = 'lang-name';
+            langName.textContent = language;
 
             const copyBtn = document.createElement('button');
             copyBtn.className = 'code-action-btn';
             copyBtn.setAttribute('aria-label', 'Copy code');
-            
             copyBtn.innerHTML = `
                 <i data-lucide="copy" class="lucide-icon icon-copy"></i>
                 <i data-lucide="check" class="lucide-icon icon-check"></i>
             `;
-            
             copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_code);
 
+            header.appendChild(langName);
             header.appendChild(copyBtn);
+            
+            container.insertBefore(header, pre);
             lucide.createIcons({ nodes: [copyBtn] });
 
             copyBtn.addEventListener('click', () => {
-                const code = container.querySelector('pre code').innerText;
+                const code = pre.innerText;
                 navigator.clipboard.writeText(code).then(() => {
                     copyBtn.classList.add('copied');
                     copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_success);
                     setTimeout(() => {
                         copyBtn.classList.remove('copied');
-                        copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_code);
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy code: ', err);
-                    copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_fail);
-                    setTimeout(() => {
                         copyBtn.setAttribute('data-tooltip', translations[currentLanguage].copy_code);
                     }, 2000);
                 });
@@ -197,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         selectors.userInput.value = '';
-        autoResizeTextarea(selectors.userInput);
+        selectors.userInput.style.height = 'auto';
         selectors.sendBtn.disabled = true;
         isStreaming = true;
 
@@ -233,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateScheduled = true;
                     requestAnimationFrame(() => {
                         contentDiv.innerHTML = renderMarkdown(fullReply + ' <span class="loading-cursor"></span>');
+                        addCopyCodeFunctionality(contentDiv);
                         selectors.chatBox.scrollTop = selectors.chatBox.scrollHeight;
                         updateScheduled = false;
                     });
@@ -245,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Frontend Error:", error);
-            contentDiv.innerHTML = renderMarkdown(`Sorry, an error occurred: ${error.message}`);
+            contentDiv.innerHTML = renderMarkdown(`**Error:** ${error.message}`);
         } finally {
             saveState();
             selectors.sendBtn.disabled = false;
@@ -254,24 +257,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- 3. UI & EVENT LISTENERS ---
-    const autoResizeTextarea = (el) => {
-        el.style.height = 'auto';
-        el.style.height = `${el.scrollHeight}px`;
+    // --- 3. EVENT LISTENERS & UI ---
+    const setupEventListeners = () => {
+        selectors.sendBtn?.addEventListener('click', handleSendMessage);
+        selectors.userInput?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+        selectors.userInput?.addEventListener('input', () => {
+            selectors.userInput.style.height = 'auto';
+            selectors.userInput.style.height = `${selectors.userInput.scrollHeight}px`;
+        });
+        selectors.newChatBtn?.addEventListener('click', createNewChat);
+        selectors.sidebarToggleBtn?.addEventListener('click', () => selectors.sidebar.classList.toggle('closed'));
+        selectors.settingsBtn?.addEventListener('click', () => openModal(selectors.settingsModal));
+        selectors.closeModalBtns.forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay'))));
+        selectors.clearHistoryBtn?.addEventListener('click', () => {
+            showConfirmModal(translations[currentLanguage].confirm_title, translations[currentLanguage].confirm_clear, () => {
+                allChats = {};
+                currentChatId = null;
+                saveState();
+                createNewChat();
+            });
+        });
+        selectors.lightModeBtn?.addEventListener('click', () => applyTheme('light'));
+        selectors.darkModeBtn?.addEventListener('click', () => applyTheme('dark'));
+        selectors.usernameInput?.addEventListener('change', saveState);
+        selectors.micBtn?.addEventListener('click', toggleRecording);
     };
 
-    const openModal = (modal) => {
-        if (modal) modal.style.display = 'flex';
-    };
+    const openModal = (modal) => modal && (modal.style.display = 'flex');
+    const closeModal = (modal) => modal && (modal.style.display = 'none');
 
-    const closeModal = (modal) => {
-        if (modal) modal.style.display = 'none';
-    };
-
-    const showConfirmModal = (titleKey, textKey, onConfirm) => {
-        document.getElementById('confirm-title').dataset.key = titleKey;
-        document.getElementById('confirm-text').dataset.key = textKey;
-        applyLanguage(currentLanguage, false); // Apply text without reloading
+    const showConfirmModal = (title, text, onConfirm) => {
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-text').textContent = text;
         openModal(selectors.confirmModal);
         selectors.confirmOkBtn.onclick = () => {
             onConfirm();
@@ -283,18 +305,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyTheme = (theme) => {
         document.body.dataset.theme = theme;
         localStorage.setItem('nlvx-theme', theme);
-        selectors.lightModeBtn.classList.toggle('active', theme === 'light');
-        selectors.darkModeBtn.classList.toggle('active', theme === 'dark');
+        selectors.lightModeBtn?.classList.toggle('active', theme === 'light');
+        selectors.darkModeBtn?.classList.toggle('active', theme === 'dark');
     };
 
-    const applyLanguage = (lang, reload = true) => {
+    const applyLanguage = (lang) => {
         currentLanguage = lang;
         localStorage.setItem('nlvx-language', lang);
         const translation = translations[lang];
         document.documentElement.lang = translation.code;
         document.documentElement.dir = translation.dir;
-        document.body.dir = translation.dir;
-
         document.querySelectorAll('[data-key]').forEach(el => {
             const key = el.dataset.key;
             if (translation[key]) el.textContent = translation[key];
@@ -303,11 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const key = el.dataset.keyPlaceholder;
             if (translation[key]) el.placeholder = translation[key];
         });
-
-        if (reload) {
-            showToast("Language updated. Reloading...", 'success');
-            setTimeout(() => window.location.reload(), 1000);
-        }
     };
 
     const populateLanguageSwitcher = () => {
@@ -319,37 +334,17 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.dataset.lang = lang.code;
             btn.classList.toggle('active', lang.code === currentLanguage);
             btn.onclick = () => {
-                showConfirmModal('confirm_title', 'confirm_clear', () => applyLanguage(lang.code));
+                showConfirmModal(
+                    "Confirm Language Change", 
+                    "Changing the language will reload the application. Continue?", 
+                    () => {
+                        localStorage.setItem('nlvx-language', lang.code);
+                        window.location.reload();
+                    }
+                );
             };
             selectors.languageSwitcher.appendChild(btn);
         });
-    };
-
-    const setupEventListeners = () => {
-        selectors.sendBtn.addEventListener('click', handleSendMessage);
-        selectors.userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-            }
-        });
-        selectors.userInput.addEventListener('input', () => autoResizeTextarea(selectors.userInput));
-        selectors.newChatBtn.addEventListener('click', createNewChat);
-        selectors.sidebarToggleBtn.addEventListener('click', () => selectors.sidebar.classList.toggle('closed'));
-        selectors.settingsBtn.addEventListener('click', () => openModal(selectors.settingsModal));
-        selectors.closeModalBtns.forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay'))));
-        selectors.clearHistoryBtn.addEventListener('click', () => {
-            showConfirmModal('confirm_title', 'confirm_clear', () => {
-                allChats = {};
-                currentChatId = null;
-                saveState();
-                createNewChat();
-            });
-        });
-        selectors.lightModeBtn.addEventListener('click', () => applyTheme('light'));
-        selectors.darkModeBtn.addEventListener('click', () => applyTheme('dark'));
-        selectors.usernameInput.addEventListener('change', saveState);
-        selectors.micBtn.addEventListener('click', toggleRecording);
     };
 
     // --- 4. SPEECH RECOGNITION ---
@@ -359,70 +354,69 @@ document.addEventListener('DOMContentLoaded', () => {
             selectors.micBtn.style.display = 'none';
             return;
         }
-
-        if (window.isSecureContext === false) {
-            selectors.micBtn.addEventListener('click', () => {
-                showToast("Mic access requires a secure (HTTPS) connection.", 'error');
-            });
-            return;
-        }
-
         recognition = new SpeechRecognition();
         recognition.interimResults = true;
         recognition.continuous = false;
-        recognition.lang = currentLanguage.startsWith('ar') ? 'ar-SA' : (currentLanguage.startsWith('ur') ? 'ur-PK' : 'en-US');
-
+        
         recognition.onstart = () => {
             isRecording = true;
             selectors.micBtn.classList.add('is-recording');
             selectors.micListeningIndicator.style.display = 'flex';
         };
-
         recognition.onresult = (event) => {
-            let finalTranscript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
-                }
-            }
-            selectors.userInput.value = finalTranscript;
-            autoResizeTextarea(selectors.userInput);
+            let transcript = Array.from(event.results)
+                .map(result => result[0])
+                .map(result => result.transcript)
+                .join('');
+            selectors.userInput.value = transcript;
+            selectors.userInput.style.height = 'auto';
+            selectors.userInput.style.height = `${selectors.userInput.scrollHeight}px`;
         };
-
         recognition.onend = () => {
             isRecording = false;
             selectors.micBtn.classList.remove('is-recording');
             selectors.micListeningIndicator.style.display = 'none';
+            if (selectors.userInput.value.trim()) {
+                handleSendMessage();
+            }
         };
-
         recognition.onerror = (event) => {
             console.error('Speech recognition error', event.error);
             let errorMessage = "An unknown microphone error occurred.";
             if (event.error === 'not-allowed' || event.error === 'security') {
-                errorMessage = "Microphone access was denied. Please allow it in your browser settings.";
+                errorMessage = "Microphone access was denied. Please allow access in your browser settings.";
             } else if (event.error === 'network') {
                 errorMessage = "A network error occurred. Please check your connection.";
             } else if (event.error === 'no-speech') {
-                errorMessage = "No speech was detected. Please try again.";
+                errorMessage = "No speech was detected.";
             }
-            showToast(errorMessage, 'error');
+            showInputError(errorMessage);
             isRecording = false;
             selectors.micBtn.classList.remove('is-recording');
             selectors.micListeningIndicator.style.display = 'none';
         };
     };
 
-    const toggleRecording = () => {
-        if (!recognition) return;
+    const toggleRecording = async () => {
+        if (window.isSecureContext === false) {
+            showInputError("Mic requires a secure (HTTPS) connection.");
+            return;
+        }
+        if (!recognition) {
+            showInputError("Speech recognition is not supported on this browser.");
+            return;
+        }
         if (isRecording) {
             recognition.stop();
-        } else {
-            try {
-                recognition.start();
-            } catch (e) {
-                console.error("Could not start recognition:", e);
-                showToast("Could not start voice recognition.", 'error');
-            }
+            return;
+        }
+        try {
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+            recognition.lang = localStorage.getItem('nlvx-voice-lang') || 'en-US';
+            recognition.start();
+        } catch (err) {
+            console.error("Error getting media stream or starting recognition:", err);
+            recognition.onerror({ error: 'not-allowed' });
         }
     };
 
@@ -433,16 +427,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('nlvx-theme') || 'dark';
         applyTheme(savedTheme);
 
-        applyLanguage(currentLanguage, false);
+        applyLanguage(currentLanguage);
         populateLanguageSwitcher();
 
-        selectors.usernameInput.value = localStorage.getItem('nlvx-username') || '';
+        selectors.usernameInput.value = localStorage.getItem('nlvx-username') || 'User';
 
-        try {
-            allChats = JSON.parse(localStorage.getItem('nlvx-all-chats')) || {};
-        } catch {
-            allChats = {};
-        }
+        allChats = JSON.parse(localStorage.getItem('nlvx-all-chats')) || {};
         currentChatId = localStorage.getItem('nlvx-current-chat-id');
         
         if (Object.keys(allChats).length === 0 || !allChats[currentChatId]) {
