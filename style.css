@@ -211,9 +211,9 @@ body::before {
 }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* --- INTERACTIVE CODE BLOCK STYLING (Final Version) --- */
+/* --- INTERACTIVE CODE BLOCK STYLING (IMPROVED BUTTON) --- */
 .code-block-container {
-    background-color: #0D1117; /* A darker, separate background for the container */
+    background-color: #0D1117;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-main);
     margin: 1rem 0;
@@ -226,8 +226,8 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--bg-color); /* Slightly different from the code area */
-    padding: 0.5rem 1rem;
+    background-color: var(--bg-color);
+    padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -241,40 +241,75 @@ body::before {
 .code-action-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: transparent;
-    border: none;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     color: var(--secondary-text-color);
-    padding: 0.4rem 0.6rem;
     border-radius: var(--border-radius-small);
     cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
+    position: relative;
     transition: all var(--transition-fast);
 }
 
 .code-action-btn:hover {
     background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+}
+
+.code-action-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    z-index: 10;
+}
+
+.code-action-btn:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.code-action-btn.copied {
+    background-color: #28a745;
+    border-color: #28a745;
     color: white;
 }
 
 .code-action-btn .lucide-icon {
     width: 16px;
     height: 16px;
+    transition: opacity 0.2s ease;
 }
+
+.code-action-btn.copied .icon-copy { display: none; }
+.code-action-btn .icon-check { display: none; }
+.code-action-btn.copied .icon-check { display: inline-block; }
 
 .code-block-container pre {
     margin: 0;
     padding: 1rem;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
 }
 
 .code-block-container pre code.hljs {
     font-family: var(--font-code);
     font-size: 0.95rem;
     line-height: 1.6;
-    background: none; /* The background is now on the <pre> tag */
+    background: none;
     padding: 0;
 }
 
@@ -413,15 +448,4 @@ body::before {
 
 /* --- TOAST --- */
 .toast {
-    visibility: hidden; min-width: 250px; background: #333; color: white;
-    text-align: center; border-radius: var(--border-radius-main); padding: 1rem;
-    position: fixed; z-index: 2000; left: 50%; bottom: 30px;
-    transform: translateX(-50%); opacity: 0; transition: all 0.5s ease;
-    box-shadow: var(--shadow-color);
-}
-.toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 768px) {
-    .sidebar { position: fixed; transform: translateX(-100%); }
-    [dir="rtl"] .sidebar { transform: translateX(100
+    visibility: hidden; min-width: 250px; background: #
