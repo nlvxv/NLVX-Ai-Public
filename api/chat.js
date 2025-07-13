@@ -1,8 +1,11 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
 // --- 1. Configuration & Setup ---
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // تأكد من أنك قمت بوضع مفتاح Gemini API في متغيرات البيئة
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODEL_NAME = "gemini-1.5-pro-latest";
+
+// Zod has been completely removed.
+// const requestSchema = z.object({...}); // DELETED
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
@@ -48,10 +51,11 @@ export default async function handler(req) {
     let history;
     try {
         const body = await req.json();
-        history = body.history;
-        if (!Array.isArray(history) || history.length === 0) {
-            throw new Error("History is not a valid array.");
+        // Simple manual validation instead of Zod
+        if (!body || !Array.isArray(body.history) || body.history.length === 0) {
+            throw new Error("Request body must be an object with a non-empty 'history' array.");
         }
+        history = body.history;
     } catch (error) {
         return createErrorResponse(`Invalid input.`, 400, error.message);
     }
@@ -62,7 +66,6 @@ export default async function handler(req) {
             systemInstruction: buildSystemPrompt(),
         });
 
-        // Gemini requires a specific format for history. We need to adapt our chat history.
         const geminiHistory = history.slice(0, -1).map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: msg.content }],
@@ -72,7 +75,6 @@ export default async function handler(req) {
 
         const chat = model.startChat({
             history: geminiHistory,
-            // Safety settings to allow for unrestricted responses
             safetySettings: [
                 { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
                 { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
