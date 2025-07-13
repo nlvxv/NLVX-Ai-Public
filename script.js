@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.history-item').forEach(item => {
             item.classList.toggle('active', item.dataset.chatId === chatId);
         });
-        // Close sidebar on mobile after selecting a chat
         if (window.innerWidth <= 768) {
             selectors.sidebar.classList.add('closed');
         }
@@ -220,12 +219,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentDiv = assistantMessageElement.querySelector('.message-content');
         
         try {
+            // MODIFICATION: Removed user_language from the request body
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    history: allChats[currentChatId].messages,
-                    user_language: currentLanguage
+                    history: allChats[currentChatId].messages
                 }),
             });
 
@@ -308,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-text').textContent = text;
         openModal(selectors.confirmModal);
         
-        // Clone and replace the OK button to remove old event listeners
         const newOkBtn = selectors.confirmOkBtn.cloneNode(true);
         selectors.confirmOkBtn.parentNode.replaceChild(newOkBtn, selectors.confirmOkBtn);
         selectors.confirmOkBtn = newOkBtn;
@@ -429,7 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            // Request permission every time to handle cases where it might be revoked
             await navigator.mediaDevices.getUserMedia({ audio: true });
             recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : currentLanguage === 'ur' ? 'ur-PK' : 'en-US';
             recognition.start();
