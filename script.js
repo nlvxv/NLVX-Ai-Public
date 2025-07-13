@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentDiv = assistantMessageElement.querySelector('.message-content');
         
         try {
-            // MODIFICATION: Removed user_language from the request body
+            // This is the final version, sending only the history.
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
