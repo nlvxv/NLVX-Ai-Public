@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.history-item').forEach(item => {
             item.classList.toggle('active', item.dataset.chatId === chatId);
         });
-        // Close sidebar on mobile after selecting a chat
         if (window.innerWidth <= 768) {
             selectors.sidebar.classList.add('closed');
         }
@@ -230,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'An unknown error occurred.' }));
+                const errorData = await response.json().catch(() => ({ error: "An unknown error occurred. The server response was not valid JSON." }));
                 throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
@@ -246,7 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!updateScheduled) {
                     updateScheduled = true;
                     requestAnimationFrame(() => {
-                        contentDiv.innerHTML = renderMarkdown(fullReply + ' <span class="loading-cursor"></span>');
+                        // Typing cursor has been removed from here
+                        contentDiv.innerHTML = renderMarkdown(fullReply);
                         addCopyCodeFunctionality(contentDiv);
                         selectors.chatBox.scrollTop = selectors.chatBox.scrollHeight;
                         updateScheduled = false;
@@ -308,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-text').textContent = text;
         openModal(selectors.confirmModal);
         
-        // Clone and replace the OK button to remove old event listeners
         const newOkBtn = selectors.confirmOkBtn.cloneNode(true);
         selectors.confirmOkBtn.parentNode.replaceChild(newOkBtn, selectors.confirmOkBtn);
         selectors.confirmOkBtn = newOkBtn;
@@ -429,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            // Request permission every time to handle cases where it might be revoked
             await navigator.mediaDevices.getUserMedia({ audio: true });
             recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : currentLanguage === 'ur' ? 'ur-PK' : 'en-US';
             recognition.start();
