@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contentDiv.className = 'message-content';
         
         if (message === 'loading') {
-            contentDiv.innerHTML = `<p><span class="loading-cursor"></span></p>`;
+            contentDiv.innerHTML = `<p></p>`; // Removed the loading cursor span
         } else {
             contentDiv.innerHTML = renderMarkdown(message);
             addCopyCodeFunctionality(contentDiv);
@@ -228,9 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                // This part is crucial for handling errors from the backend
                 const errorData = await response.json().catch(() => ({ error: { message: 'An unknown server error occurred.' } }));
-                // The 'error' object from our backend is nested, so we access errorData.error.message
                 throw new Error(errorData.error.message || `HTTP error! status: ${response.status}`);
             }
 
@@ -246,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!updateScheduled) {
                     updateScheduled = true;
                     requestAnimationFrame(() => {
-                        contentDiv.innerHTML = renderMarkdown(fullReply + ' <span class="loading-cursor"></span>');
+                        // Removed the loading cursor from here as well
+                        contentDiv.innerHTML = renderMarkdown(fullReply);
                         addCopyCodeFunctionality(contentDiv);
                         selectors.chatBox.scrollTop = selectors.chatBox.scrollHeight;
                         updateScheduled = false;
@@ -261,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Frontend Error:", error);
             // This is the fix for the [object Object] error.
-            // It directly uses the error message we received.
             const errorMessage = error.message || JSON.stringify(error);
             contentDiv.innerHTML = renderMarkdown(`**Error:** ${errorMessage}`);
         } finally {

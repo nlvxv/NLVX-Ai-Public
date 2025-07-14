@@ -137,7 +137,6 @@ body::before {
 }
 
 /* --- SIDEBAR HIDING LOGIC (FOR ALL SCREENS) --- */
-/* This logic applies to both PC and Mobile */
 .sidebar.closed {
     margin-left: calc(-1 * var(--sidebar-width));
 }
@@ -150,7 +149,6 @@ body::before {
     margin-right: calc(-1 * var(--sidebar-width));
 }
 
-/* The toggle button is always visible */
 #sidebar-toggle-btn {
     display: flex;
     z-index: 30;
@@ -267,19 +265,6 @@ body::before {
 }
 .message-content p:last-child {
     margin-bottom: 0;
-}
-.loading-cursor {
-    display: inline-block;
-    width: 3px;
-    height: 1em;
-    background: var(--text-color);
-    animation: blink 1s infinite;
-    vertical-align: text-bottom;
-}
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
 }
 
 /* --- CODE BLOCKS --- */
@@ -561,7 +546,6 @@ body::before {
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
-/* No special rules needed for mobile, as the "push" behavior is now default */
 @media (max-width: 768px) {
     .chat-header, .input-area {
         padding-left: 1rem;
