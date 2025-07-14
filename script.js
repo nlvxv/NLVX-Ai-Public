@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.history-item').forEach(item => {
             item.classList.toggle('active', item.dataset.chatId === chatId);
         });
+        // Close sidebar on mobile after selecting a chat
         if (window.innerWidth <= 768) {
             selectors.sidebar.classList.add('closed');
         }
@@ -223,15 +224,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    history: allChats[currentChatId].messages
+                    history: allChats[currentChatId].messages,
+                    user_language: currentLanguage
                 }),
             });
 
             if (!response.ok) {
-                // This part is crucial for handling errors from the backend
-                const errorData = await response.json().catch(() => ({ error: { message: 'An unknown server error occurred.' } }));
-                // The 'error' object from our backend is nested, so we access errorData.error.message
-                throw new Error(errorData.error.message || `HTTP error! status: ${response.status}`);
+                const errorData = await response.json().catch(() => ({ error: 'An unknown error occurred.' }));
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
             const reader = response.body.getReader();
@@ -260,10 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Frontend Error:", error);
-            // This is the fix for the [object Object] error.
-            // It directly uses the error message we received.
-            const errorMessage = error.message || JSON.stringify(error);
-            contentDiv.innerHTML = renderMarkdown(`**Error:** ${errorMessage}`);
+            contentDiv.innerHTML = renderMarkdown(`**Error:** ${error.message}`);
         } finally {
             saveState();
             selectors.sendBtn.disabled = false;
@@ -311,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('confirm-text').textContent = text;
         openModal(selectors.confirmModal);
         
+        // Clone and replace the OK button to remove old event listeners
         const newOkBtn = selectors.confirmOkBtn.cloneNode(true);
         selectors.confirmOkBtn.parentNode.replaceChild(newOkBtn, selectors.confirmOkBtn);
         selectors.confirmOkBtn = newOkBtn;
@@ -431,6 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
+            // Request permission every time to handle cases where it might be revoked
             await navigator.mediaDevices.getUserMedia({ audio: true });
             recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : currentLanguage === 'ur' ? 'ur-PK' : 'en-US';
             recognition.start();
