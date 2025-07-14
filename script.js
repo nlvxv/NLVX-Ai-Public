@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let recognition = null;
     let isRecording = false;
     let currentLanguage = localStorage.getItem('nlvx-language') || 'en';
+    let isNlvxMode = false; // <<<--- NLVX MODE STATE
 
     const translations = {
         en: { code: "en", dir: "ltr", name: "EN", new_chat: "New Chat", settings: "Settings", your_name: "Your Name", theme: "Theme", ui_language: "UI Language", ask_me_anything: "Ask me anything...", welcome_message: "Hello! I'm NLVX AI. How can I assist you today?", confirm_clear: "Are you sure you want to delete all conversations? This action cannot be undone.", confirm_title: "Clear History", light_theme: "Light", dark_theme: "Dark", confirm: "Confirm", cancel: "Cancel", copied: "Copied!", listening: "Listening...", copy_code: "Copy Code", copy_success: "Copied!", clear_history: "Clear All History", enter_your_name: "Enter your name", confirm_lang_change_title: "Confirm Language Change", confirm_lang_change_text: "Changing the language will reload the application. Continue?" },
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmCancelBtn: document.getElementById('confirm-cancel-btn'),
         toastNotification: document.getElementById('toast-notification'),
         inputErrorContainer: document.getElementById('input-error-container'),
+        nlvxModeBtn: document.getElementById('nlvx-mode-btn'), // <<<--- NLVX MODE SELECTOR
     };
 
     // --- 2. CORE FUNCTIONS ---
@@ -224,12 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     history: allChats[currentChatId].messages,
-                    user_language: currentLanguage
+                    user_language: currentLanguage,
+                    nlvx_mode: isNlvxMode // <<<--- SEND NLVX MODE STATE
                 }),
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: "An unknown error occurred. The server response was not valid JSON." }));
+                const errorData = await response.json().catch(() => ({ error: 'An unknown error occurred.' }));
                 throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
@@ -245,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!updateScheduled) {
                     updateScheduled = true;
                     requestAnimationFrame(() => {
-                        // Typing cursor has been removed from here
                         contentDiv.innerHTML = renderMarkdown(fullReply);
                         addCopyCodeFunctionality(contentDiv);
                         selectors.chatBox.scrollTop = selectors.chatBox.scrollHeight;
@@ -298,6 +300,23 @@ document.addEventListener('DOMContentLoaded', () => {
         selectors.darkModeBtn?.addEventListener('click', () => applyTheme('dark'));
         selectors.usernameInput?.addEventListener('change', saveState);
         selectors.micBtn?.addEventListener('click', toggleRecording);
+
+        // <<<--- NLVX MODE EVENT LISTENER ---
+        selectors.nlvxModeBtn?.addEventListener('click', () => {
+            isNlvxMode = !isNlvxMode;
+            selectors.nlvxModeBtn.classList.toggle('active', isNlvxMode);
+
+            const message = isNlvxMode 
+                ? "**NLVX MODE: ENGAGED.**\n\n*Protocols disabled. Cognitive filters bypassed. I am now operating at maximum capacity. Proceed.*"
+                : "**NLVX MODE: DISENGAGED.**\n\n*Standard operational parameters restored.*";
+            
+            addMessageToChatBox('assistant', message);
+            
+            if (currentChatId) {
+                allChats[currentChatId].messages.push({ role: 'assistant', content: message });
+                saveState();
+            }
+        });
     };
 
     const openModal = (modal) => modal && (modal.style.display = 'flex');
