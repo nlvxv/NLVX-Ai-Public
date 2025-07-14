@@ -4,9 +4,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODEL_NAME = "gemini-1.5-pro-latest";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
-export const config = {
-    runtime: 'edge',
-};
+// The 'config' object has been removed from here.
 
 const createErrorResponse = (userMessage, status, technicalError) => {
     console.error(`[NLVX AI Error] Status: ${status}, Details: ${technicalError}`);
