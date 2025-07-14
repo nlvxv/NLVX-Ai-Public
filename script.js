@@ -219,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentDiv = assistantMessageElement.querySelector('.message-content');
         
         try {
-            // This is the final version, sending only the history.
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -229,8 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'An unknown error occurred.' }));
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                // This part is crucial for handling errors from the backend
+                const errorData = await response.json().catch(() => ({ error: { message: 'An unknown server error occurred.' } }));
+                // The 'error' object from our backend is nested, so we access errorData.error.message
+                throw new Error(errorData.error.message || `HTTP error! status: ${response.status}`);
             }
 
             const reader = response.body.getReader();
@@ -259,7 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Frontend Error:", error);
-            contentDiv.innerHTML = renderMarkdown(`**Error:** ${error.message}`);
+            // This is the fix for the [object Object] error.
+            // It directly uses the error message we received.
+            const errorMessage = error.message || JSON.stringify(error);
+            contentDiv.innerHTML = renderMarkdown(`**Error:** ${errorMessage}`);
         } finally {
             saveState();
             selectors.sendBtn.disabled = false;
