@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contentDiv.className = 'message-content';
         
         if (message === 'loading') {
-            contentDiv.innerHTML = `<p></p>`; // Removed the loading cursor span
+            contentDiv.innerHTML = `<p></p>`;
         } else {
             contentDiv.innerHTML = renderMarkdown(message);
             addCopyCodeFunctionality(contentDiv);
@@ -244,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!updateScheduled) {
                     updateScheduled = true;
                     requestAnimationFrame(() => {
-                        // Removed the loading cursor from here as well
                         contentDiv.innerHTML = renderMarkdown(fullReply);
                         addCopyCodeFunctionality(contentDiv);
                         selectors.chatBox.scrollTop = selectors.chatBox.scrollHeight;
@@ -253,13 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            contentDiv.innerHTML = renderMarkdown(fullReply);
-            addCopyCodeFunctionality(contentDiv);
-            allChats[currentChatId].messages.push({ role: 'assistant', content: fullReply });
+            const trimmedReply = fullReply.trim();
+
+            if (trimmedReply) {
+                contentDiv.innerHTML = renderMarkdown(trimmedReply);
+                addCopyCodeFunctionality(contentDiv);
+                allChats[currentChatId].messages.push({ role: 'assistant', content: trimmedReply });
+            } else {
+                assistantMessageElement.remove();
+            }
 
         } catch (error) {
             console.error("Frontend Error:", error);
-            // This is the fix for the [object Object] error.
             const errorMessage = error.message || JSON.stringify(error);
             contentDiv.innerHTML = renderMarkdown(`**Error:** ${errorMessage}`);
         } finally {
