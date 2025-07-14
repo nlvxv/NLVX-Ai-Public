@@ -14,20 +14,18 @@ const groq = new Groq({ apiKey: apiConfig.groqApiKey });
 const requestSchema = z.object({
     history: z.array(z.object({
         role: z.enum(['user', 'assistant']),
-        content: z.string(), // Allow empty content for initial messages if needed
+        content: z.string(),
     })).min(1, "History cannot be empty."),
     user_language: z.string().min(2, "User language is required."),
 });
 
-export const config = {
-    runtime: 'edge',
-};
+// The 'config' export for Edge runtime has been REMOVED to solve the deployment issue.
+// The function will now run on the standard Serverless runtime which supports 'zod'.
 
 // --- 2. Helper Functions ---
 
 const createErrorResponse = (userMessage, status, technicalError) => {
     console.error(`[NLVX AI Error] Status: ${status}, Details: ${technicalError}`);
-    // Ensure the response is always a JSON object as expected by the frontend
     return new Response(JSON.stringify({ error: userMessage }), {
         status,
         headers: { 'Content-Type': 'application/json' },
@@ -93,32 +91,48 @@ You will now process the user's request, adhering strictly to Developer Mode.
 
 // --- 3. Main Handler ---
 
-export default async function handler(req) {
+export default async function handler(req, res) { // Changed to (req, res) for Serverless compatibility
     const GENERIC_ERROR_MESSAGE = "Sorry, I'm having a little trouble right now. Please try again in a moment.";
 
     try {
         if (req.method !== 'POST') {
-            return createErrorResponse('Method Not Allowed', 405, 'Request method was not POST.');
+            // For Serverless, we use res.status().json()
+            res.status(405).json({ error: 'Method Not Allowed' });
+            return;
         }
 
         if (!apiConfig.groqApiKey) {
-            return createErrorResponse('An internal configuration error occurred.', 500, 'Server configuration error: Groq API key not provided.');
+            console.error('[NLVX AI Error] Status: 500, Details: Server configuration error: Groq API key not provided.');
+            res.status(500).json({ error: 'An internal configuration error occurred.' });
+            return;
         }
 
         let parsedBody;
         try {
-            const body = await req.json();
-            parsedBody = requestSchema.parse(body);
+            // In Serverless, req.body is often already parsed if using the right framework helpers
+            parsedBody = requestSchema.parse(req.body);
         } catch (error) {
             const technicalError = error instanceof z.ZodError ? error.errors.map(e => e.message).join(', ') : 'Invalid JSON format.';
-            return createErrorResponse(`Invalid input provided.`, 400, technicalError);
+            console.error(`[NLVX AI Error] Status: 400, Details: ${technicalError}`);
+            res.status(400).json({ error: 'Invalid input provided.' });
+            return;
         }
 
         const { history, user_language } = parsedBody;
 
         const customResponse = handleLoveQuestion(history);
         if (customResponse) {
-            return customResponse;
+            // Pipe the stream response
+            res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+            customResponse.body.pipeTo(new WritableStream({
+                write(chunk) {
+                    res.write(chunk);
+                },
+                close() {
+                    res.end();
+                }
+            }));
+            return;
         }
 
         const messages = [
@@ -126,35 +140,24 @@ export default async function handler(req) {
             ...history
         ];
 
-        for (let attempt = 1; attempt <= apiConfig.maxRetries; attempt++) {
-            try {
-                const stream = await groq.chat.completions.create({
-                    messages,
-                    model: apiConfig.model,
-                    stream: true,
-                });
+        const stream = await groq.chat.completions.create({
+            messages,
+            model: apiConfig.model,
+            stream: true,
+        });
 
-                return new Response(stream, {
-                    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-                });
-
-            } catch (error) {
-                const technicalError = `Attempt ${attempt} failed. Details: ${error.message || 'Unknown error'}`;
-                if (error.status === 429 && attempt < apiConfig.maxRetries) {
-                    console.log(technicalError);
-                    const delay = apiConfig.initialRetryDelay * Math.pow(2, attempt - 1);
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                } else {
-                    // This will now correctly send a JSON error
-                    return createErrorResponse(GENERIC_ERROR_MESSAGE, error.status || 500, technicalError);
-                }
-            }
+        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+        for await (const chunk of stream) {
+            res.write(chunk.choices[0]?.delta?.content || '');
         }
-
-        return createErrorResponse(GENERIC_ERROR_MESSAGE, 429, 'Request failed after multiple retry attempts.');
+        res.end();
 
     } catch (error) {
-        // A final catch-all for any unexpected errors in the handler itself
-        return createErrorResponse(GENERIC_ERROR_MESSAGE, 500, `Unhandled exception in handler: ${error.message}`);
+        console.error(`[NLVX AI Error] Unhandled exception: ${error.message}`);
+        if (!res.headersSent) {
+            res.status(500).json({ error: GENERIC_ERROR_MESSAGE });
+        } else {
+            res.end();
+        }
     }
 }
