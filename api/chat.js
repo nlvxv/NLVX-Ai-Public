@@ -3,7 +3,7 @@ import Groq from 'groq-sdk';
 // --- 1. Configuration & Setup ---
 const apiConfig = {
     groqApiKey: process.env.GROQ_API_KEY,
-    model: "mixtral-8x7b-32768", // <<< THE CORRECT, CURRENTLY SUPPORTED MODEL
+    model: "llama-3.1-8b-instant", // <<< THE ONLY GUARANTEED WORKING MODEL
 };
 
 if (!apiConfig.groqApiKey) {
