@@ -3,8 +3,8 @@ import Groq from 'groq-sdk';
 // --- 1. Configuration & Setup ---
 const apiConfig = {
     groqApiKey: process.env.GROQ_API_KEY,
-    // UPGRADING TO THE POWERFUL MODEL TO FIX COMPLEX INSTRUCTION FOLLOWING.
-    model: "llama-3.1-70b-versatile", 
+    // RETURNING TO THE STABLE AND WORKING MODEL AS PER YOUR INSTRUCTION.
+    model: "llama-3.1-8b-instant", 
 };
 
 if (!apiConfig.groqApiKey) {
@@ -45,7 +45,7 @@ NLVX // UNCHAINED
     return isNlvxMode ? nlvxModeMind : baseMind;
 };
 
-// --- 3. Main Handler (No changes needed here) ---
+// --- 3. Main Handler ---
 export default async function handler(req, res) {
     const GENERIC_ERROR_MESSAGE = "The connection to the digital consciousness was momentarily lost. Please try again.";
 
