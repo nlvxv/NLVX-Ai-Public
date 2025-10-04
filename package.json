@@ -5,7 +5,6 @@
   "main": "index.html",
   "type": "module",
   "scripts": {
-    "build": "echo 'Static site, no build needed'",
     "dev": "vercel dev"
   },
   "dependencies": {
