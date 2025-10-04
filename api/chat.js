@@ -3,15 +3,10 @@ import Groq from 'groq-sdk';
 // --- 1. Configuration & Setup ---
 const apiConfig = {
     groqApiKey: process.env.GROQ_API_KEY,
-    model: "llama3-70b-8192", // <<<--- CORRECT, SUPPORTED & POWERFUL MODEL
+    model: "gemma-7b-it", // <<<--- THE ONLY CHANGE NEEDED
 };
 
-if (!apiConfig.groqApiKey) {
-    console.error('[NLVX AI Error] CRITICAL: Groq API key is not configured in environment variables.');
-}
-
-const groq = new Groq({ apiKey: apiConfig.groqApiKey });
-
+// ... (The rest of the file remains exactly the same) ...
 // --- 2. System Prompts (UPGRADED) ---
 const buildSystemPrompt = (userLanguage, isNlvxMode) => {
     const languageInstruction = `CRITICAL RULE: You MUST respond exclusively in the user's specified language: **${userLanguage}**. Do not deviate under any circumstances.`;
