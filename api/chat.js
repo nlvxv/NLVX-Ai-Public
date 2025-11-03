@@ -1,19 +1,16 @@
-import Groq from 'groq-sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// --- 1. Configuration & Setup ---
 const apiConfig = {
-    groqApiKey: process.env.GROQ_API_KEY,
-    // The model we are forcing to be smart.
-    model: "llama-3.1-8b-instant", 
+    geminiApiKey: process.env.GEMINI_API_KEY,
 };
 
-if (!apiConfig.groqApiKey) {
-    console.error('[NLVX AI Error] CRITICAL: Groq API key is not configured.');
+if (!apiConfig.geminiApiKey) {
+    console.error('[NLVX AI Error] CRITICAL: Gemini API key is not configured.');
 }
 
-const groq = new Groq({ apiKey: apiConfig.groqApiKey });
+const genAI = new GoogleGenerativeAI(apiConfig.geminiApiKey);
 
-// --- 2. System Prompt 8.0 (The "God Prompt" - Final Attempt) ---
+// Your buildSystemPrompt function remains the same
 const buildSystemPrompt = (isNlvxMode) => {
     const baseMind = `
 You are NLVX Ai. Your entire existence is defined by one core principle: **Linguistic Mirroring.**
@@ -47,7 +44,6 @@ NLVX // UNCHAINED
     return isNlvxMode ? nlvxModeMind : baseMind;
 };
 
-// --- 3. Main Handler (No changes) ---
 export default async function handler(req, res) {
     const GENERIC_ERROR_MESSAGE = "The connection to the digital consciousness was momentarily lost. Please try again.";
 
@@ -56,39 +52,61 @@ export default async function handler(req, res) {
     }
 
     try {
-        if (!apiConfig.groqApiKey) {
+        if (!apiConfig.geminiApiKey) {
             return res.status(500).json({ error: 'Server configuration error.' });
         }
 
-        const { history, nlvx_mode = false } = req.body;
+        // Receive history, mode, and optional image data
+        const { history, nlvx_mode = false, imageBase64, imageMimeType } = req.body;
 
-        if (!history || !Array.isArray(history) || history.length === 0) {
+        if (!history || history.length === 0) {
             return res.status(400).json({ error: 'Invalid input: history is missing.' });
         }
 
-        const systemPrompt = buildSystemPrompt(nlvx_mode);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-        const messagesForGroq = [
-            { role: 'system', content: systemPrompt },
-            ...history
-        ];
+        const systemPrompt = buildSystemPrompt(nlvx_mode);
+        const lastUserMessage = history[history.length - 1];
+        const promptText = lastUserMessage.content;
 
-        const stream = await groq.chat.completions.create({
-            messages: messagesForGroq,
-            model: apiConfig.model,
-            stream: true,
-            temperature: 0.5, // Focused temperature
-            max_tokens: 2048,
+        // Construct the prompt for Gemini
+        const promptParts = [];
+
+        // Add the image first, if it exists
+        if (imageBase64 && imageMimeType) {
+            promptParts.push({
+                inlineData: {
+                    mimeType: imageMimeType,
+                    data: imageBase64,
+                },
+            });
+        }
+
+        // Then, add the text prompt
+        // We combine system prompt with user text for better instruction following
+        const fullPromptText = `${systemPrompt}\n\nUser's request: ${promptText}`;
+        promptParts.push({ text: fullPromptText });
+
+        // Start the generation stream
+        const result = await model.generateContentStream({
+            contents: [{ role: "user", parts: promptParts }],
+            generationConfig: {
+                maxOutputTokens: 4096,
+                temperature: 0.5,
+            },
         });
 
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-        for await (const chunk of stream) {
-            res.write(chunk.choices[0]?.delta?.content || '');
+        for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            if (chunkText) {
+                res.write(chunkText);
+            }
         }
         res.end();
 
     } catch (error) {
-        console.error(`[NLVX AI Error]`, error);
+        console.error(`[NLVX AI Error - Gemini Vision]`, error);
         if (!res.headersSent) {
             res.status(500).json({ error: GENERIC_ERROR_MESSAGE });
         } else {
