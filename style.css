@@ -788,3 +788,82 @@ body::before {
         margin-left: 1rem;
     }
 }
+
+/* --- ADDITIONAL MOBILE OPTIMIZATIONS --- */
+@media (max-width: 600px) {
+    .chat-header h1 {
+        font-size: 1.2rem;
+    }
+    .chat-header .logo-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    .chat-header {
+        padding: 0.5rem 0.75rem;
+    }
+    .chat-box {
+        padding: 0.75rem;
+    }
+    .message {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .message .avatar {
+        width: 32px;
+        height: 32px;
+    }
+    .message-content {
+        max-width: calc(100% - 44px); /* Adjusted for smaller avatar */
+    }
+    .message-content > :not(.code-block-container) {
+        padding: 0.6rem 1rem;
+    }
+    .input-area {
+        padding: 0.5rem 0.75rem;
+    }
+    .input-wrapper {
+        padding: 0.25rem;
+    }
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .nlvx-mode-btn-header {
+        padding: 0.5rem;
+    }
+    .nlvx-mode-btn-header i {
+        width: 20px;
+        height: 20px;
+    }
+    .image-preview-container {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-header .chat-title-wrapper {
+        /* Hide the title on very small screens to save space */
+        display: none;
+    }
+    .chat-header {
+        justify-content: space-between;
+    }
+    .nlvx-mode-btn-header {
+        /* Ensure the button is visible and takes up less space */
+        margin-left: auto;
+    }
+    .input-wrapper {
+        /* Reduce padding further */
+        padding: 0.1rem;
+    }
+    .icon-btn {
+        /* Ensure icons are still tappable */
+        width: 40px;
+        height: 40px;
+    }
+    .input-area {
+        padding: 0.5rem 0.5rem;
+    }
+}

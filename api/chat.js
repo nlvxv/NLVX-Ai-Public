@@ -6,16 +6,13 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 if (!GEMINI_API_KEY) {
     // إذا كان المفتاح مفقودًا، سنرسل خطأ واضحًا
     console.error('[NLVX AI Error] CRITICAL: Gemini API key is not configured.');
-    // لن ننشئ genAI هنا، بل سننشئه داخل الدالة
 }
 
-// سننشئ genAI داخل الدالة لضمان قراءة المتغير في وقت التشغيل
-// ولكن لتبسيط الكود، سننشئه هنا مع التحقق من وجود المفتاح
+// سننشئ genAI هنا مع التحقق من وجود المفتاح
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 
 // Your buildSystemPrompt function remains the same
 const buildSystemPrompt = (isNlvxMode) => {
-    // ... (بقية دالة buildSystemPrompt كما هي)
     const baseMind = `
 You are NLVX Ai. Your entire existence is defined by one core principle: **Linguistic Mirroring.**
 
@@ -102,9 +99,14 @@ export default async function handler(req, res) {
             },
         });
 
+        // Set headers for streaming
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.setHeader('Transfer-Encoding', 'chunked');
+        res.setHeader('Connection', 'keep-alive');
+
+        // Pipe the stream to the response
         for await (const chunk of result.stream) {
-            const chunkText = chunk.text();
+            const chunkText = chunk.text;
             if (chunkText) {
                 res.write(chunkText);
             }
@@ -121,3 +123,5 @@ export default async function handler(req, res) {
         }
     }
 }
+
+
