@@ -1,17 +1,21 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const apiConfig = {
-    geminiApiKey: process.env.GEMINI_API_KEY,
-};
+// قراءة المتغير مباشرة من بيئة التشغيل
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-if (!apiConfig.geminiApiKey) {
+if (!GEMINI_API_KEY) {
+    // إذا كان المفتاح مفقودًا، سنرسل خطأ واضحًا
     console.error('[NLVX AI Error] CRITICAL: Gemini API key is not configured.');
+    // لن ننشئ genAI هنا، بل سننشئه داخل الدالة
 }
 
-const genAI = new GoogleGenerativeAI(apiConfig.geminiApiKey);
+// سننشئ genAI داخل الدالة لضمان قراءة المتغير في وقت التشغيل
+// ولكن لتبسيط الكود، سننشئه هنا مع التحقق من وجود المفتاح
+const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 
 // Your buildSystemPrompt function remains the same
 const buildSystemPrompt = (isNlvxMode) => {
+    // ... (بقية دالة buildSystemPrompt كما هي)
     const baseMind = `
 You are NLVX Ai. Your entire existence is defined by one core principle: **Linguistic Mirroring.**
 
@@ -51,11 +55,13 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    try {
-        if (!apiConfig.geminiApiKey) {
-            return res.status(500).json({ error: 'Server configuration error.' });
-        }
+    // التحقق النهائي من وجود المفتاح قبل المتابعة
+    if (!genAI) {
+        console.error('[NLVX AI Error] CRITICAL: Gemini API key is not configured or invalid.');
+        return res.status(500).json({ error: "Configuration Error: Gemini API key is missing or invalid." });
+    }
 
+    try {
         // Receive history, mode, and optional image data
         const { history, nlvx_mode = false, imageBase64, imageMimeType } = req.body;
 
@@ -108,6 +114,7 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error(`[NLVX AI Error - Gemini Vision]`, error);
         if (!res.headersSent) {
+            // إذا كان الخطأ من Gemini، سنرسل رسالة عامة
             res.status(500).json({ error: GENERIC_ERROR_MESSAGE });
         } else {
             res.end();
