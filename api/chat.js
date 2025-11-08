@@ -3,7 +3,7 @@ import Groq from 'groq-sdk';
 // --- 1. Configuration & Setup ---
 const apiConfig = {
     groqApiKey: process.env.GROQ_API_KEY,
-    model: "llama3-70b-8192",
+    model: "llama-3.1-8b-instant", 
 };
 
 if (!apiConfig.groqApiKey) {
